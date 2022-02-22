@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -8,14 +10,21 @@ public class GameManager : MonoBehaviour
     public bool isGameOver;
     public List<Vector3> targetPositions;
 
+    public TextMeshProUGUI pointsText;
+    public GameObject gameOverPanel;
+
     private float minX = -3.75f;
     private float minY = -3.75f;
     private float distanceBetweenSquares = 2.5f;
 
-    private float spawnRate = 2f;
+    private float spawnRate = 1f;
     private Vector3 randomPos;
+
+    private int score = 0;
     void Start()
     {
+        pointsText.text = $"Score: {score}";
+        gameOverPanel.SetActive(false);
         StartCoroutine(SpawnRandomTarget());
     }
 
@@ -51,5 +60,22 @@ public class GameManager : MonoBehaviour
                 targetPrefabs[randomIndex].transform.rotation);
             targetPositions.Add(randomPos);
         }        
+    }
+
+    public void UpdateScore(int pointToAdd)
+    {
+        score += pointToAdd;
+        pointsText.text = $"Score: {score}";
+    }
+
+    public void GameOver()
+    {
+        isGameOver = true;
+        gameOverPanel.SetActive(true);
+    }
+
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(0);
     }
 }
